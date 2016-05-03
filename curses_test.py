@@ -159,7 +159,7 @@ def generate_children():
 					elif k == 2:
 						colors_2 = colors.replace(prep[2], '') # too much of this, but what can you do?
 						colors_2.remove(prep[2])
-						prep[2] = colors_2[random.randint(0, len(colors_2))]
+						prep[2] = colors_2[random.randint(0, len(colors_2) - 1)]
 							
 				pntgs[i].append(prep)
 			else: # do no changes
