@@ -82,6 +82,7 @@ def leave():
 	
 rows = columns = 0
 def reset_screen_size():
+	global rows, columns
 	rows, columns = os.popen('stty size', 'r').read().split()
 	rows = int(rows)
 	columns = int(columns)
