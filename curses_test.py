@@ -352,6 +352,7 @@ while(True):
 			else:
 				pass # maybe do some status updating in here, we don't have to do anything though'
 			scr.addstr(3, 0, "status: running					")
+		curses.setsyx(rows - 1, 1)
 		scr.refresh()
 		
 
