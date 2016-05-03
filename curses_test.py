@@ -82,8 +82,6 @@ def leave():
 	
 rows = columns = 0
 def reset_screen_size():
-	global rows
-	global columns
 	rows, columns = os.popen('stty size', 'r').read().split()
 	rows = int(rows)
 	columns = int(columns)
@@ -352,6 +350,7 @@ while(True):
 			else:
 				pass # maybe do some status updating in here, we don't have to do anything though'
 			scr.addstr(3, 0, "status: running					")
+		scr.addstr(3, 0, str(rows) + ' ' + str(columns) )
 		scr.refresh()
 		
 
