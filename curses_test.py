@@ -87,7 +87,6 @@ def reset_screen_size():
 	columns = int(columns)
 	scr.addstr(rows - 1, 0, ":")
 	curses.setsyx(rows, 1)
-	scr.addstr(3, 0, str(rows) + ' ' + str(columns) )
 	
 current_iter = '0'
 
@@ -203,6 +202,7 @@ pause = True
 next_one = False
 scr.addstr(3, 0, "status: not started")
 votes = []
+voting = False
 while(True):
 	put = scr.getch()
 	if(put < 256 and put > 0):
