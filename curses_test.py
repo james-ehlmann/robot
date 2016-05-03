@@ -86,6 +86,7 @@ def reset_screen_size():
 	rows = int(rows)
 	columns = int(columns)
 	scr.addstr(rows - 1, 0, ":")
+	curses.setsyx(rows - 1, 1)
 	
 current_iter = '0'
 
@@ -349,7 +350,6 @@ while(True):
 			else:
 				pass # maybe do some status updating in here, we don't have to do anything though'
 			scr.addstr(3, 0, "status: running					")
-		curses.setsyx(rows - 1, 1)
 		scr.refresh()
 		
 
