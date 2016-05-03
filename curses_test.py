@@ -344,7 +344,7 @@ while(True):
 							votes = [0 for x in range(0, len(pntgs))]
 							voting = True # pause our shit, wait for painting
 							
-			else if(recieved == 'E'): # ERROR 0H SHIT
+			elif(recieved == 'E'): # ERROR 0H SHIT
 				# don't do anything until except maybe send the kill command
 				pause = True				
 			else:
