@@ -58,7 +58,7 @@ for i in range(0, len(s)):
 	scr.addstr(10 + i, 0, s[i])
 
 addr = 0x04
-bus = smbus.SMBUS(1)
+bus = smbus.SMBus(1)
 
 def send_out(command):
 	scr.addstr(4, 0, "Current command: " + command)
