@@ -205,7 +205,7 @@ votes = []
 voting = False
 while(True):
 	put = scr.getch()
-	scr.addstr(7, 0, str(rows) + ":" + str(cols))
+	scr.addstr(7, 0, str(rows) + ":" + str(columns))
 	if(put < 256 and put > 0):
 		put = chr(put)
 		scr.addstr(2, 0, "this is the last terminal entry: '" + put + "'")
