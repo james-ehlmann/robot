@@ -100,7 +100,8 @@ def load_init_parent(relative_dir):
 			if(i.startswith("parent")):
 				x = i.split('-')
 				tl.append(int(x[1]))
-	current_iter = str(tl.sort()[-1])
+	tl.sort()
+	current_iter = str(tl[-1])
 	
 load_init_parent('.')
 parent = loads(open("parent-"+ current_iter + "-.pollock", 'r').readlines())
@@ -187,7 +188,7 @@ def gen_child():
 	prep = []
 	prep.append(random.randint(0, max_x))
 	prep.append(random.randint(0, max_y))
-	prep.append(colors[random.randint(0, len(colors))])
+	prep.append(colors[random.randint(0, len(colors) - 1)])
 	return prep	
 
 def set_parent(pntg):
