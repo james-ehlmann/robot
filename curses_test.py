@@ -16,6 +16,8 @@ import sys
 import curses
 import string
 from json import loads, dumps as loads, dumps
+import smbus
+
 
 # file extension = .pollock
 
@@ -41,15 +43,22 @@ colors = 'AEU'
 # r = reset screen size
 # v = end voting
 # n = next painting ready (in place.)
-# [1|2|3] = add vote count to this painting
+# [i| for i in string.digits] = add vote count to this painting
+
+addr = 0x04
+bus = smbus.SMBUS(1)
 
 def send_out(command):
 	scr.addstr(4, 0, "Current command: " + command)
+	scr.addstr(5, 0, 'recieving command')
 	while(recieve() != 'G'):
-		# send our command out.
-	
+		bus.write_byte(addr, ord(command))
+		scr.addstr(5, 0, 'command recieved')
+		if(scr.getch() == 'k'):
+			pause = True # stop writing out, things are fucked
+			
 def recieve():
-	return 0 # todo recieving logic.
+	return chr(bus.read_byte(addr)) # todo recieving logic.
 
 # exit tech pollock
 def leave():
@@ -77,7 +86,19 @@ scr.nodelay(1)
 scr.addstr(1, 0, "Tech Pollock version 1")
 reset_screen_size()
 
-parent = loads(open("parent.pollock", 'r').readlines())
+current_iter = '0'
+
+def load_init_parent(relative_dir):
+	tl = []
+	for i in os.listdir(relative_dir):
+		if(i.endswith(".pollock")):
+			if(i.startswith("parent")):
+				x = i.split('-')
+				tl.append(int(x[1]))
+	current_iter = str(tl.sort()[-1])
+	
+load_init_parent('.')
+parent = loads(open("parent-"+ current_iter + "-.pollock", 'r').readlines())
 pntgs = []
 
 # one cell: [x, y, colors as string]
@@ -177,7 +198,7 @@ start = False
 pause = True
 next_one = False
 scr.addstr(3, 0, "status: not started")
-
+votes = []
 while(True):
 	put = scr.getch()
 	if(put < 256 and put > 0):
@@ -188,9 +209,26 @@ while(True):
 		elif(put == 'r'):
 			reset_screen_size()
 		elif(put in string.digits): # voting
-			pass
+			if(int(put) < len(votes)):
+				votes[int(put)] += 1
 		elif(put == 'v'): # calibrate votes, and generate next sequence
-			pass
+			voting = False
+			f = open("parent-" + current_iter + "-.pollock", "w")
+			f.write(dumps(pntgs[i]))
+			for i in range(0, len(pntgs)):
+				f = open("child-" + current_iter + "-" + i + "-.pollock", "w")
+				f.write(dumps(pntgs[i]))
+				f.close()
+			winner = 0
+			win_num = 0
+			for i in range(0, len(votes)):
+				if(votes[i] > win_num):
+					win_num = votes[i]
+					winner = i
+			set_parent(pntgs[winner])
+			generate_children()
+			votes = []
+			next_one = True
 		elif(put == 's'): # start it
 			# initialize communication
 			start = not start
@@ -204,20 +242,15 @@ while(True):
 			pause = True
 	else:
 		if(start): # initilize some stuff, so that our program can run effectively
-			scr.addstr(3, 0, "status: starting         ")
-			stuff = os.listdir()
-			stuff2 = []
-			for g in stuff:
-				if g.endswith('.pollock'):
-					stuff2.append(g)
-			stuff2.sort()
-			parent = loads(stuff2[-1]) # get the last parent our program recognizez
+			scr.addstr(3, 0, "status: starting         					")
+			# get the last parent our program recognizez
 			generate_children()
-			pntgs[current_pntg].sort()
-			pntgs[current_pntg].reverse()
 			start = not start
+			next_one = True
 		elif(pause): # pause the running of our program
-			scr.addstr(3, 0, "status: paused         ")
+			scr.addstr(3, 0, "status: paused						         ")
+		elif(voting):
+			scr.addstr(3, 0, "tallying votes" + str(votes))
 		elif(next_one):
 			scr.addstr(3, 0, "status: waiting for painting to be inserted.")
 		else: # run our program
@@ -300,18 +333,19 @@ while(True):
 								pntgs[current_pntg].reverse()
 								next_one = True
 							else: # because presumably we're at the front'
-								 
-							pass # keep going
+								 next_one = True
 						else:
+							current_iter = str(int(current_iter) + 1) # increment our current iter
 							current_pntg = 0
-							next_one = True # pause our shit, wait for painting
-					# TODO add some looping logic.
+							votes = [0 for x in range(0, len(pntgs))]
+							voting = True # pause our shit, wait for painting
+							
 			else if(recieved == 'E'): # ERROR 0H SHIT
 				# don't do anything until except maybe send the kill command
-				pause = True
+				pause = True				
 			else:
 				pass # maybe do some status updating in here, we don't have to do anything though'
-		
+			scr.addstr(3, 0, "status: running					")
 		scr.refresh()
 		
 
