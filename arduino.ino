@@ -5,7 +5,7 @@ int number = 0;
 int state = 0;
 
 double temp;
-
+//test
 void setup()
 {
     pinMode(13, OUTPUT);
@@ -25,7 +25,8 @@ void loop()
 }
 
 // callback for received data
-void receiveData(int byteCount){
+void receiveData(int byteCount)
+{
 
     while(Wire.available())
     {
