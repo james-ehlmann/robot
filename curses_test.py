@@ -34,7 +34,7 @@ import smbus
 # U = blue
 colors = 'AEU'
 
-
+s = """
 # terminal commands
 # p = pause
 # q = quit
@@ -44,6 +44,10 @@ colors = 'AEU'
 # v = end voting
 # n = next painting ready (in place.)
 # [i| for i in string.digits] = add vote count to this painting
+"""
+s = s.split('\n')
+for i in range(0, len(s)):
+	scr.addstr(10 + i, 0, s[i])
 
 addr = 0x04
 bus = smbus.SMBUS(1)
