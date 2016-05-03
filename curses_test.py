@@ -40,8 +40,6 @@ curses.cbreak()
 scr.keypad(1)
 scr.nodelay(1)
 scr.addstr(1, 0, "Tech Pollock version 1")
-reset_screen_size()
-
 
 
 s = """
@@ -199,7 +197,7 @@ def set_parent(pntg):
 	parent.sort()
 
 start = False
-
+reset_screen_size()
 
 start = False
 pause = True
