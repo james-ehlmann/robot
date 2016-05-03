@@ -353,5 +353,3 @@ while(True):
 		scr.refresh()
 		
 
-return 0
-
