@@ -5,7 +5,6 @@ int number = 0;
 int state = 0;
 
 double temp;
-//test
 void setup()
 {
     pinMode(13, OUTPUT);
