@@ -34,6 +34,16 @@ import smbus
 # U = blue
 colors = 'AEU'
 
+
+scr = curses.initscr()
+curses.cbreak()
+scr.keypad(1)
+scr.nodelay(1)
+scr.addstr(1, 0, "Tech Pollock version 1")
+reset_screen_size()
+
+
+
 s = """
 # terminal commands
 # p = pause
@@ -83,13 +93,6 @@ def reset_screen_size():
 	curses.setsyx(rows, 1)
 	scr.addstr(3, 0, str(rows) + ' ' + str(columns) )
 	
-scr = curses.initscr()
-curses.cbreak()
-scr.keypad(1)
-scr.nodelay(1)
-scr.addstr(1, 0, "Tech Pollock version 1")
-reset_screen_size()
-
 current_iter = '0'
 
 def load_init_parent(relative_dir):
