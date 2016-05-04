@@ -244,8 +244,7 @@ while(True):
 		elif(put == 'p'):
 			pause = not pause
 		elif(put == 'k'): # kill IT
-			start = False
-			send_out("K")
+			pause = True
 		elif(put == 'n'):
 			next_one = False
 			pause = True
@@ -358,4 +357,3 @@ while(True):
 		scr.addstr(rows - 1, 0, ":")
 		scr.refresh()
 		
-
