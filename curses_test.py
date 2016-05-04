@@ -73,8 +73,11 @@ def send_out(command):
 		we_got = recieve()
 			
 def recieve():
-	return bus.read_byte(addr) # todo recieving logic.
-
+	thing = bus.read_byte(addr)
+	if(thing != chr(0x00)):
+		return chr(bus.read_byte(addr)) # todo recieving logic.
+	else:
+		return 'Z'
 # exit tech pollock
 def leave():
 	curses.nocbreak()
