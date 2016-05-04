@@ -22,7 +22,7 @@ import random
 # file extension = .pollock
 
 # D = done
-# G = command received
+# G = got it
 # R = turn right 90
 # L = turn left 90
 # F = forward 1 tick
@@ -68,6 +68,7 @@ def send_out(command):
 		scr.addstr(5, 0, 'command recieved')
 		if(scr.getch() == 'k'):
 			pause = True # stop writing out, things are fucked
+			break
 			
 def recieve():
 	return chr(bus.read_byte(addr)) # todo recieving logic.
@@ -102,7 +103,7 @@ def load_init_parent(relative_dir):
 	current_iter = str(tl[-1])
 	
 load_init_parent('.')
-parent = loads(open("parent-"+ current_iter + "-.pollock", 'r').readlines())
+parent = loads(open("parent-"+ current_iter + "-.pollock", 'r').read())
 pntgs = []
 
 # one cell: [x, y, colors as string]
@@ -158,7 +159,6 @@ def generate_children():
 						prep[1] = random.randint(bottom, top)
 					elif k == 2:
 						colors_2 = colors.replace(prep[2], '') # too much of this, but what can you do?
-						colors_2.remove(prep[2])
 						prep[2] = colors_2[random.randint(0, len(colors_2) - 1)]
 							
 				pntgs[i].append(prep)
@@ -210,6 +210,9 @@ while(True):
 	if(put < 256 and put > 0):
 		put = chr(put)
 		scr.addstr(2, 0, "this is the last terminal entry: '" + put + "'")
+		if(put in string.uppercase):
+			scr.addstr("status: custom input mode                     ")
+			send_out(put)
 		if(put == 'q'):
 			leave()
 		elif(put == 'r'):
