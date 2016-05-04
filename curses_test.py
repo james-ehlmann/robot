@@ -61,20 +61,24 @@ addr = 0x04
 bus = smbus.SMBus(1)
 
 def send_out(command):
+	
 	scr.addstr(4, 0, "Current command: " + command)
 	scr.addstr(5, 0, 'recieving command')
-	recieve = recieve()
-	while(recieve != 'G'):
+	we_got = recieve()
+	while(we_got != 'G'):
 		bus.write_byte(addr, ord(command))
-		scr.addstr(6, 0, "what we're getting: " + recieve)
+		scr.addstr(6, 0, "what we're getting: " + we_got)
 		if(scr.getch() == 'k'):
 			pause = True # stop writing out, things are fucked
 			break
-		recieve = recieve()
+		we_got = recieve()
 			
 def recieve():
-	return chr(bus.read_byte(addr)) # todo recieving logic.
-
+	thing = bus.read_byte(addr)
+	if(thing not in string.printable):
+		return chr(bus.read_byte(addr)) # todo recieving logic.
+	else:
+		return 'Z'
 # exit tech pollock
 def leave():
 	curses.nocbreak()
