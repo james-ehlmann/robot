@@ -61,16 +61,23 @@ addr = 0x04
 bus = smbus.SMBus(1)
 
 def send_out(command):
+	
 	scr.addstr(4, 0, "Current command: " + command)
 	scr.addstr(5, 0, 'recieving command')
-	we_got = recieve()
-	while(we_got != 'G'):
-		bus.write_byte(addr, ord(command))
-		scr.addstr(6, 0, "what we're getting: " + we_got)
-		if(scr.getch() == 'k'):
-			pause = True # stop writing out, things are fucked
-			break
+	try:
 		we_got = recieve()
+	except:
+		we_got = 'Z'
+	while(we_got != 'G'):
+		try:
+			bus.write_byte(addr, ord(command))
+			scr.addstr(6, 0, "what we're getting: " + we_got)
+			if(scr.getch() == 'k'):
+				pause = True # stop writing out, things are fucked
+				break
+			we_got = recieve()
+		except:
+			pass
 			
 def recieve():
 	thing = bus.read_byte(addr)
