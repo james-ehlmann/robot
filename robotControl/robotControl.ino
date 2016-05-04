@@ -10,7 +10,6 @@
 
 #include <Servo.h>
 #include <SoftwareSerial.h>
-#include <Wire.h>
 
 ///////// INITIALIZATION ///////////////
 
@@ -20,10 +19,6 @@ Servo right;
 Servo paint1;
 Servo paint2;
 Servo paint3;
-
-#define SLAVE_ADDRESS 0x04
-char input = 0;
-int state = 0;
 
 // define serial ports
 // software serial : TX = digital pin 4, RX = digital pin 5
@@ -35,9 +30,9 @@ int full = 1240;
 int half = 700; // currently a rough estimate and has not been tested
 
 // create a string to hold any input sent by the pi
-//String input = "";
+String input = "";
 // create a simple boolean value to let us know if the input string is complete
-//boolean done = false;
+boolean done = false;
 
 
 ///////// SETUP //////////////////
@@ -50,23 +45,14 @@ void setup()
   //port.begin(9600);
 
   // reserve proper amount of space for input string 
-  //input.reserve(256);
-
-  //pinMode(13, OUTPUT);
-
-  // initialize i2c as slave
-  Wire.begin(SLAVE_ADDRESS);
-
-  // define callbacks for i2c communication
-  Wire.onReceive(receiveData);
-  Wire.onRequest(sendData);
+  input.reserve(256);
 
   // attach servos to ports
-  left.attach(8); 
-  right.attach(9); 
-  paint1.attach(10); 
-  paint2.attach(11); 
-  paint3.attach(12); 
+  left.attach(9); 
+  right.attach(10); 
+  paint1.attach(11); 
+  paint2.attach(12); 
+  paint3.attach(13); 
 } 
 
 
@@ -75,7 +61,6 @@ void setup()
 
 void loop() 
 { 
-  /*
   // delay of 325 rotates the servo by 90 degrees
   // delay of 1240 rotates the servo by ~360
 
@@ -86,16 +71,14 @@ void loop()
     // clear the string:
     inputString = "";
     stringComplete = false;
-  }  */
-
-  delay(100);
+  }  
 
 }
 
 
 //////// END OF LOOP /////////////////////
 
-/*void serialEvent() 
+void serialEvent() 
 {
   while (Serial.available()) 
   {
@@ -110,82 +93,56 @@ void loop()
       stringComplete = true;
     }
   }
-}*/
-
-
-// callback for received data
-void receiveData(int byteCount){
-
-    while(Wire.available())
-    {
-        // check to see if anything has been sent from the pi
-        input = Wire.read();
-
-        // check if we need to go forward
-        if (input == F)
-        {
-          // set the input to G and send it to the pi to let it know we got the message
-           sendData('G');
-
-           // execute
-           forward();
-
-           // send the signal to the pi that we are done 
-           sendData('D');
-        }
-    }
-}
-
-// callback for sending data
-void sendData(char letter)
-{
-    Wire.write(letter);
 }
 
 
 //////////// MOVEMENT COMMANDS //////////////////////
 
-void forward()
+void GoForward()
 {
   left.writeMicroseconds(1700); 
   right.writeMicroseconds(1300);
   delay(full);
   
-  myServo.writeMicroseconds(1500);
+  left.writeMicroseconds(1500);
+  right.writeMicroseconds(1500);
   delay(1000);
 }
 
-void backward()
+void GoBackward()
 {
   left.writeMicroseconds(1300); 
   right.writeMicroseconds(1700);
   delay(full);
   
-  myServo.writeMicroseconds(1500);
+  left.writeMicroseconds(1500);
+  right.writeMicroseconds(1500);
   delay(1000);
 }
 
-void left()
+void TurnLeft()
 {
   left.writeMicroseconds(1700); 
   right.writeMicroseconds(1700);
   delay(quarter);
   
-  myServo.writeMicroseconds(1500);
+  left.writeMicroseconds(1500);
+  right.writeMicroseconds(1500);
   delay(1000);
 }
 
-void right()
+void TurnRight()
 {
   left.writeMicroseconds(1300); 
   right.writeMicroseconds(1300);
   delay(quarter);
   
-  myServo.writeMicroseconds(1500);
+  left.writeMicroseconds(1500);
+  right.writeMicroseconds(1500);
   delay(1000);
 }
 
-void paint1()
+void SprayPaint1()
 {
   paint1.writeMicroseconds(1300); 
   delay(full);
@@ -198,7 +155,7 @@ void paint1()
   delay(1000);
 }
 
-void paint2()
+void SprayPaint2()
 {
   paint2.writeMicroseconds(1300); 
   delay(full);
@@ -211,7 +168,7 @@ void paint2()
   delay(1000);
 }
 
-void paint3()
+void SprayPaint3()
 {
   paint3.writeMicroseconds(1300); 
   delay(full);
