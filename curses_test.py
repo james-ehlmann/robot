@@ -66,7 +66,7 @@ def send_out(command):
 	we_got = recieve()
 	while(we_got != 'G'):
 		bus.write_byte(addr, ord(command))
-		scr.addstr(6, 0, "what we're getting: " + recieve)
+		scr.addstr(6, 0, "what we're getting: " + we_got)
 		if(scr.getch() == 'k'):
 			pause = True # stop writing out, things are fucked
 			break
