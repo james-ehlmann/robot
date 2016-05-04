@@ -73,7 +73,7 @@ def send_out(command):
 		recieve = recieve()
 			
 def recieve():
-	return chr(bus.read_byte(addr)) # todo recieving logic.
+	return bus.read_byte(addr) # todo recieving logic.
 
 # exit tech pollock
 def leave():
