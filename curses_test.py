@@ -63,14 +63,14 @@ bus = smbus.SMBus(1)
 def send_out(command):
 	scr.addstr(4, 0, "Current command: " + command)
 	scr.addstr(5, 0, 'recieving command')
-	recieve = recieve()
-	while(recieve != 'G'):
+	we_got = recieve()
+	while(we_got != 'G'):
 		bus.write_byte(addr, ord(command))
 		scr.addstr(6, 0, "what we're getting: " + recieve)
 		if(scr.getch() == 'k'):
 			pause = True # stop writing out, things are fucked
 			break
-		recieve = recieve()
+		we_got = recieve()
 			
 def recieve():
 	return bus.read_byte(addr) # todo recieving logic.
