@@ -136,6 +136,7 @@ things_that_can_change = [0, 1, 2] # where 0 is the x, 1 is the y, 2 is the colo
 
 
 def generate_children():
+	global parent, pntgs, things_that_can_change, eigth_x, eigth_y, max_x, max_y, colors, eight_size
 	for i in range(0, len(pntgs)):
 		pntgs[i] = []
 		for j in parent:
@@ -186,6 +187,7 @@ def generate_children():
 		
 def gen_child():
 	prep = []
+	global max_x, max_y, colors
 	prep.append(random.randint(0, max_x))
 	prep.append(random.randint(0, max_y))
 	prep.append(colors[random.randint(0, len(colors) - 1)])
