@@ -43,8 +43,10 @@ void loop(){
      blink(Serial.read() - '0');  // convert the character '1'-'9' to decimal 1-9
   }*/
 
+  char input = Serial.read();
+
   // check for forward command
-  if(Serial.read() == 'F')
+  if(input == 'F')
   {
     // send a 'G' saying that we got it
     Serial.write('G');
@@ -57,7 +59,7 @@ void loop(){
   }
 
   // check for backward command
-  else if(Serial.read() == 'B')
+  else if(input == 'B')
   {
     // send a 'G' saying that we got it
     Serial.write('G');
@@ -70,7 +72,7 @@ void loop(){
   }
 
   // check for right turn command
-  else if(Serial.read() == 'R')
+  else if(input == 'R')
   {
     // send a 'G' saying that we got it
     Serial.write('G');
@@ -83,7 +85,7 @@ void loop(){
   }
 
   // check for left turn command
-  else if(Serial.read() == 'L')
+  else if(input == 'L')
   {
     // send a 'G' saying that we got it
     Serial.write('G');
@@ -96,7 +98,7 @@ void loop(){
   }
 
   // check for command to shoot green paint
-  else if(Serial.read() == 'A')
+  else if(input == 'A')
   {
     // send a 'G' saying that we got it
     Serial.write('G');
@@ -109,7 +111,7 @@ void loop(){
   }
 
   // check for command to shoot red paint
-  else if(Serial.read() == 'E')
+  else if(input == 'E')
   {
     // send a 'G' saying that we got it
     Serial.write('G');
@@ -122,7 +124,7 @@ void loop(){
   }
 
   // check for command to shoot blue paint
-  else if(Serial.read() == 'U')
+  else if(input == 'U')
   {
     // send a 'G' saying that we got it
     Serial.write('G');
@@ -135,7 +137,7 @@ void loop(){
   }
 
   // check for the kill command
-  else if(Serial.read() == 'K')
+  else if(input == 'K')
   {
     // send a 'G' saying that we got it
     Serial.write('G');
