@@ -63,11 +63,13 @@ def send_out(command):
 	global ser
 	scr.addstr(4, 0, "Current command: " + command)
 	scr.addstr(5, 0, 'recieving command    ')
+	scr.refresh()
 	ser.write(command)
 	try:
 		while(ser.read(1) != 'G'):
 			pass
 		scr.addstr(5, 0, "command recieved   ")
+		scr.refresh()
 		while(ser.read(1) != 'D'):
 			pass
 		scr.addstr(5, 0, "command finished   ")
