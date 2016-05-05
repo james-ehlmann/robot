@@ -346,8 +346,6 @@ while(True):
 						current_pntg = 0
 						votes = [0 for x in range(0, len(pntgs))]
 						voting = True # pause our shit, wait for painting						
-			else:
-				pass # maybe do some status updating in here, we don't have to do anything though'
 			scr.addstr(3, 0, "status: running					")
 		else:
 			scr.addstr(3, 0, "status: not running                ")
