@@ -57,16 +57,18 @@ s = s.split('\n')
 for i in range(0, len(s)):
 	scr.addstr(10 + i, 0, s[i])
 
+ser = serial.Serial("/dev/ttyACM0")
 
 def send_out(command):
+	global ser
 	scr.addstr(4, 0, "Current command: " + command)
 	scr.addstr(5, 0, 'recieving command    ')
-	serial.write(command)
+	ser.write(command)
 	try:
-		while(serial.read(1) != 'G'):
+		while(ser.read(1) != 'G'):
 			pass
 		scr.addstr(5, 0, "command recieved   ")
-		while(serial.read(1) != 'D'):
+		while(ser.read(1) != 'D'):
 			pass
 		scr.addstr(5, 0, "command finished   ")
 	except:		
