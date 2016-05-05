@@ -66,6 +66,9 @@ def send_out(command):
 		while(serial.read(1) != 'G'):
 			pass
 		scr.addstr(5, 0, "command recieved   ")
+		while(serial.read(1) != 'D'):
+			pass
+		scr.addstr(5, 0, "command finished   ")
 	except:		
 		pass
 # exit tech pollock
