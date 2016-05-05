@@ -16,7 +16,7 @@ import sys
 import curses
 import string
 from json import loads, dumps as loads, dumps
-import smbus
+import serial
 import random
 
 # file extension = .pollock
@@ -57,28 +57,17 @@ s = s.split('\n')
 for i in range(0, len(s)):
 	scr.addstr(10 + i, 0, s[i])
 
-addr = 0x04
-bus = smbus.SMBus(1)
 
 def send_out(command):
-	
 	scr.addstr(4, 0, "Current command: " + command)
-	scr.addstr(5, 0, 'recieving command')
-	we_got = recieve()
-	while(we_got != 'G'):
-		bus.write_byte(addr, ord(command))
-		scr.addstr(6, 0, "what we're getting: " + we_got)
-		if(scr.getch() == 'k'):
-			pause = True # stop writing out, things are fucked
-			break
-		we_got = recieve()
-			
-def recieve():
-	thing = bus.read_byte(addr)
-	if(thing not in string.printable):
-		return chr(bus.read_byte(addr)) # todo recieving logic.
-	else:
-		return 'Z'
+	scr.addstr(5, 0, 'recieving command    ')
+	serial.write(command)
+	try:
+		while(serial.read(1) != 'G'):
+			pass
+		scr.addstr(5, 0, "command recieved   ")
+	except:		
+		pass
 # exit tech pollock
 def leave():
 	curses.nocbreak()
@@ -161,7 +150,7 @@ def generate_children():
 						if(top > max_y):
 							top = max_y
 						elif(bottom < 0):
-							bottom = 0
+							bottom = 0	
 						prep[1] = random.randint(bottom, top)
 					elif k == 2:
 						colors_2 = colors.replace(prep[2], '') # too much of this, but what can you do?
@@ -210,6 +199,7 @@ next_one = False
 scr.addstr(3, 0, "status: not started")
 votes = []
 voting = False
+running = False
 while(True):
 	put = scr.getch()
 	scr.addstr(7, 0, str(rows) + ":" + str(columns))
@@ -219,7 +209,7 @@ while(True):
 		if(put in string.uppercase):
 			scr.addstr("status: custom input mode                     ")
 			send_out(put)
-		if(put == 'q'):
+		elif(put == 'q'):
 			leave()
 		elif(put == 'r'):
 			reset_screen_size()
@@ -254,6 +244,8 @@ while(True):
 		elif(put == 'n'):
 			next_one = False
 			pause = True
+		elif(put == 'r'):
+			running = True
 	else:
 		if(start): # initilize some stuff, so that our program can run effectively
 			scr.addstr(3, 0, "status: starting         					")
@@ -267,99 +259,95 @@ while(True):
 			scr.addstr(3, 0, "tallying votes" + str(votes))
 		elif(next_one):
 			scr.addstr(3, 0, "status: waiting for painting to be inserted.")
-		else: # run our program
-			recieved = recieve()
-			if(recieved == 'D'):
-				# need to update direction and things.
-				splat = pntgs[current_pntg][current_pntg_splatter]
-				if(current_pos[0] < splat[0]):
-					if(current_direction == 'r'):
-						send_out('F')
-						current_pos[0] += 1
-					elif(current_direction == 'l'):
-						send_out('B')
-						current_pos[0] += 1
-					elif(current_direction == 'f'):
-						send_out('R')
-						current_direction = 'r'
-					elif(current_direction == 'b'):
-						send_out('L')
-						current_direction = 'r'
-				elif(current_pos[0] > splat[0]):
-					if(current_direction == 'r'):
-						send_out('B')
-						current_pos[0] -= 1
-					elif(current_direction == 'l'):
-						send_out('F')
-						current_pos[0] -= 1
-					elif(current_direction == 'f'):
-						send_out('L')
-						current_direction = 'l'
-					elif(current_direction == 'b'):
-						send_out('R')
-						current_direction = 'l'
-				elif(current_pos[1] < splat[1]):
-					if(current_direction == 'r'):
-						send_out('L')
-						current_direction = 'f'
-					elif(current_direction == 'l'):
-						send_out('R')
-						current_direction = 'f'
-					elif(current_direction == 'f'):
-						send_out('B')
-						current_pos[1] += 1
-					elif(current_direction == 'b'):
-						send_out('F')
-						current_pos[1] += 1
-				elif(current_pos[1] > splat[1]):
-					if(current_direction == 'r'):
-						send_out('L')
-						current_direction = 'f'
-					elif(current_direction == 'l'):
-						send_out('R')
-						current_direction = 'f'
-					elif(current_direction == 'f'):
-						send_out('F')
-						current_pos[1] -= 1
-					elif(current_direction == 'b'):
-						send_out('B')
-						current_pos[1] -= 1
-				elif(current_direction != 'f'):
-					if(current_direction == 'r'):
-						send_out('L')
-						current_direction = 'f'
-					elif(current_direction == 'l'):
-						send_out('R')
-						current_direction = 'f'
-					elif(current_direction == 'b'):
-						send_out('R')
-						current_direction = 'l'
+		elif(running): # run our program
+			# need to update direction and things.
+			splat = pntgs[current_pntg][current_pntg_splatter]
+			if(current_pos[0] < splat[0]):
+				if(current_direction == 'r'):
+					send_out('F')
+					current_pos[0] += 1
+				elif(current_direction == 'l'):
+					send_out('B')
+					current_pos[0] += 1
+				elif(current_direction == 'f'):
+					send_out('R')
+					current_direction = 'r'
+				elif(current_direction == 'b'):
+					send_out('L')
+					current_direction = 'r'
+			elif(current_pos[0] > splat[0]):
+				if(current_direction == 'r'):
+					send_out('B')
+					current_pos[0] -= 1
+				elif(current_direction == 'l'):
+					send_out('F')
+					current_pos[0] -= 1
+				elif(current_direction == 'f'):
+					send_out('L')
+					current_direction = 'l'
+				elif(current_direction == 'b'):
+					send_out('R')
+					current_direction = 'l'
+			elif(current_pos[1] < splat[1]):
+				if(current_direction == 'r'):
+					send_out('L')
+					current_direction = 'f'
+				elif(current_direction == 'l'):
+					send_out('R')
+					current_direction = 'f'
+				elif(current_direction == 'f'):
+					send_out('B')
+					current_pos[1] += 1
+				elif(current_direction == 'b'):
+					send_out('F')
+					current_pos[1] += 1
+			elif(current_pos[1] > splat[1]):
+				if(current_direction == 'r'):
+					send_out('L')
+					current_direction = 'f'
+				elif(current_direction == 'l'):
+					send_out('R')
+					current_direction = 'f'
+				elif(current_direction == 'f'):
+					send_out('F')
+					current_pos[1] -= 1
+				elif(current_direction == 'b'):
+					send_out('B')
+					current_pos[1] -= 1
+			elif(current_direction != 'f'):
+				if(current_direction == 'r'):
+					send_out('L')
+					current_direction = 'f'
+				elif(current_direction == 'l'):
+					send_out('R')
+					current_direction = 'f'
+				elif(current_direction == 'b'):
+					send_out('R')
+					current_direction = 'l'
+			else:
+				send_out(splat[2]) # send out our letter to paint with.
+				current_pntg_splatter += 1
+				if(current_pntg_splatter < len(pntgs[current_pntg])):
+					pass # keep going in our loop
 				else:
-					send_out(splat[2]) # send out our letter to paint with.
-					current_pntg_splatter += 1
-					if(current_pntg_splatter < len(pntgs[current_pntg])):
-						pass # keep going in our loop
+					current_pntg += 1 # we need to start on the next painting.
+					current_pntg_splatter = 0
+					if(current_pntg < len(pntgs)):
+						if(current_pntg % 2):
+							pntgs[current_pntg].reverse()
+							next_one = True
+						else: # because presumably we're at the front'
+							 next_one = True
 					else:
-						current_pntg += 1 # we need to start on the next painting.
-						current_pntg_splatter = 0
-						if(current_pntg < len(pntgs)):
-							if(current_pntg % 2):
-								pntgs[current_pntg].reverse()
-								next_one = True
-							else: # because presumably we're at the front'
-								 next_one = True
-						else:
-							current_iter = str(int(current_iter) + 1) # increment our current iter
-							current_pntg = 0
-							votes = [0 for x in range(0, len(pntgs))]
-							voting = True # pause our shit, wait for painting
-							
-			elif(recieved == 'E'): # ERROR 0H SHIT
-				# don't do anything until except maybe send the kill command
-				pause = True				
+						current_iter = str(int(current_iter) + 1) # increment our current iter
+						current_pntg = 0
+						votes = [0 for x in range(0, len(pntgs))]
+						voting = True # pause our shit, wait for painting						
 			else:
 				pass # maybe do some status updating in here, we don't have to do anything though'
 			scr.addstr(3, 0, "status: running					")
+		else:
+			scr.addstr(3, 0, "status: not running                ")
 		scr.addstr(rows - 1, 0, ":")
 		scr.refresh()
 		
