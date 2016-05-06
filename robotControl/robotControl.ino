@@ -88,8 +88,7 @@ void loop()
     inputString = "";
     stringComplete = false;
   }  */
-
-  delay(500);
+  receiveData();
 
 }
 
@@ -127,43 +126,53 @@ void receiveData(int byteCount){
         {
             // set the input to G and send it to the pi to let it know we got the message
             output = 'G';
+            sendData();
             GoForward();
         }
         else if(input == 'B')
         {
             output = 'G';
+            sendData();
             GoBackward();
         }
         else if(input == 'R')
         {
             output = 'G';
+            sendData();
             TurnRight();
         }
         else if(input == 'L')
         {
             output = 'G';
+            sendData();
             TurnLeft();
         }
         else if(input == 'A')
         {
             output = 'G';
+            sendData();
             SprayPaint1();
         }
         else if(input == 'E')
         {
             output = 'G';
+            sendData();
             SprayPaint2();
         }
         else if(input == 'U')
         {
             output = 'G';
+            sendData();
             SprayPaint3();
         }
         else
         {
             output = 'E';
+            delay(full);
+            sendData();
         }
         output = 'D';
+        sendData();
     }
 }
 
