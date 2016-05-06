@@ -1,9 +1,9 @@
 /*
  * Richard LaFramboise
- * 
+ *
  * This is a simple program designed to take input from a Raspberry Pi and act accordingly
- * 
- * It is important to note that the kill command does not close everything out, but it 
+ *
+ * It is important to note that the kill command does not close everything out, but it
  * simply puts the Arduino in an infinite loop. Getting everything running again requires a
  * manual restart of both systems. void loop() is continously called, and I can't stop it.
  */
@@ -19,7 +19,7 @@ Servo paint1;
 Servo paint2;
 Servo paint3;
 
-// define amount for wheels to turn 
+// define amount for wheels to turn
 int quarter = 325;
 int full = 1240;
 int half = 700; // currently a rough estimate and has not been tested
@@ -29,15 +29,15 @@ void setup(){
   Serial.begin(9600);
 
   // attach servos to ports
-  left.attach(8); 
-  right.attach(9); 
-  paint1.attach(10); 
-  paint2.attach(11); 
-  paint3.attach(12); 
+  left.attach(8);
+  right.attach(9);
+  paint1.attach(10);
+  paint2.attach(11);
+  paint3.attach(12);
 }
 
 void loop(){
-  
+
   // just a short example of an if statement inside the loop
   /*if (Serial.available())  {
      blink(Serial.read() - '0');  // convert the character '1'-'9' to decimal 1-9
@@ -157,7 +157,7 @@ void loop(){
     left.writeMicroseconds(1500);
     right.writeMicroseconds(1500);
   }
-  
+
   delay(500);
 }
 
@@ -175,10 +175,10 @@ void loop(){
 
 void GoBackward()
 {
-  left.writeMicroseconds(1700); 
+  left.writeMicroseconds(1700);
   right.writeMicroseconds(1300);
   delay(full);
-  
+
   left.writeMicroseconds(1500);
   right.writeMicroseconds(1500);
   delay(1000);
@@ -186,10 +186,10 @@ void GoBackward()
 
 void GoForward()
 {
-  left.writeMicroseconds(1300); 
+  left.writeMicroseconds(1300);
   right.writeMicroseconds(1700);
   delay(full);
-  
+
   left.writeMicroseconds(1500);
   right.writeMicroseconds(1500);
   delay(1000);
@@ -197,10 +197,10 @@ void GoForward()
 
 void TurnLeft()
 {
-  left.writeMicroseconds(1700); 
+  left.writeMicroseconds(1700);
   right.writeMicroseconds(1700);
   delay(5000);
-  
+
   left.writeMicroseconds(1500);
   right.writeMicroseconds(1500);
   delay(1000);
@@ -208,10 +208,10 @@ void TurnLeft()
 
 void TurnRight()
 {
-  left.writeMicroseconds(1300); 
+  left.writeMicroseconds(1300);
   right.writeMicroseconds(1300);
   delay(5000);
-  
+
   left.writeMicroseconds(1500);
   right.writeMicroseconds(1500);
   delay(1000);
@@ -219,12 +219,12 @@ void TurnRight()
 
 void SprayPaint1()
 {
-  paint1.writeMicroseconds(1300); 
+  paint1.writeMicroseconds(1300);
   delay(half);
   paint1.writeMicroseconds(1500);
   delay(1000);
 
-  paint1.writeMicroseconds(1700); 
+  paint1.writeMicroseconds(1700);
   delay(half);
   paint1.writeMicroseconds(1500);
   delay(1000);
@@ -232,12 +232,12 @@ void SprayPaint1()
 
 void SprayPaint2()
 {
-  paint2.writeMicroseconds(1300); 
+  paint2.writeMicroseconds(1300);
   delay(half);
   paint2.writeMicroseconds(1500);
   delay(1000);
 
-  paint2.writeMicroseconds(1700); 
+  paint2.writeMicroseconds(1700);
   delay(half);
   paint2.writeMicroseconds(1500);
   delay(1000);
@@ -245,12 +245,12 @@ void SprayPaint2()
 
 void SprayPaint3()
 {
-  paint3.writeMicroseconds(1300); 
+  paint3.writeMicroseconds(1300);
   delay(half);
   paint3.writeMicroseconds(1500);
   delay(1000);
 
-  paint3.writeMicroseconds(1700); 
+  paint3.writeMicroseconds(1700);
   delay(half);
   paint3.writeMicroseconds(1500);
   delay(1000);
