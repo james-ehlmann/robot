@@ -141,9 +141,7 @@ void loop()
       input = 0;
     }
     output = 'D';
-
-
-
+    delay(200);
 }
 
 
@@ -190,12 +188,13 @@ void sendData()
 
 
 //////////// MOVEMENT COMMANDS //////////////////////
+int one_in = 175;
 
 void GoForward()
 {
   left.writeMicroseconds(1700);
   right.writeMicroseconds(1300);
-  delay(quarter);
+  delay(one_in);
 
   left.writeMicroseconds(1500);
   right.writeMicroseconds(1500);
@@ -206,7 +205,7 @@ void GoBackward()
 {
   left.writeMicroseconds(1300);
   right.writeMicroseconds(1700);
-  delay(quarter);
+  delay(one_in);
 
   left.writeMicroseconds(1500);
   right.writeMicroseconds(1500);
@@ -237,31 +236,18 @@ void TurnRight()
 
 void SprayPaint1()
 {
-//   paint1.writeMicroseconds(1300);
-//   delay(full);
-//   paint1.writeMicroseconds(1700);
-//   delay(1000 + quarter * 4);
-//   paint1.writeMicroseconds(1500);
-//   delay(1000);
-//
-paint1.writeMicroseconds(1300);
-delay(full);
-paint1.writeMicroseconds(1500);
-delay(1000);
+  paint1.writeMicroseconds(1300);
+  delay(full);
+  paint1.writeMicroseconds(1500);
+  delay(1000);
 
-paint1.writeMicroseconds(1700);
-delay(full);
-paint1.writeMicroseconds(1500);
-delay(1000);
+  paint1.writeMicroseconds(1700);
+  delay(full);
+  paint1.writeMicroseconds(1500);
+  delay(1000);
 }
 void SprayPaint2()
 {
-  // paint2.writeMicroseconds(1300);
-  // delay(quarter);
-  // paint2.writeMicroseconds(1700);
-  // delay(1000 + quarter * 4);
-  // paint2.writeMicroseconds(1500);
-  // delay(1000);
   paint2.writeMicroseconds(1300);
   delay(full);
   paint2.writeMicroseconds(1500);
@@ -275,12 +261,6 @@ void SprayPaint2()
 
 void SprayPaint3()
 {
-  // paint3.writeMicroseconds(1300);
-  // delay(quarter);
-  // paint3.writeMicroseconds(1700);
-  // delay(1000 + quarter * 4);
-  // paint3.writeMicroseconds(1500);
-  // delay(1000);
   paint3.writeMicroseconds(1300);
   delay(full);
   paint3.writeMicroseconds(1500);
