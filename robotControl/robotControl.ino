@@ -31,9 +31,9 @@ bool running = false;
 //SoftwareSerial port(4, 5); // try and use the default RX and TX ports on the board first
 
 // define amount for wheels to turn
-int quarter = 325;
-int full = 1240;
-int half = 700; // currently a rough estimate and has not been tested
+int quarter = 1500;
+int full = 5000;
+int half = 2500; // currently a rough estimate and has not been tested
 
 // create a string to hold any input sent by the pi
 //String input = "";
@@ -88,7 +88,61 @@ void loop()
     inputString = "";
     stringComplete = false;
   }  */
-  delay(500);
+
+          // check if we need to go forward
+    if (input == (byte)'F')
+    {
+      // set the input to G and send it to the pi to let it know we got the message
+      output = 'G';
+      Serial.println("GoForward");
+      GoForward();
+      input = 0;
+    }
+    else if(input == (byte)'B')
+    {
+      output = 'G';
+      Serial.println("GoBackward");
+      GoBackward();
+      input = 0;
+    }
+    else if(input == (byte)'R')
+    {
+      output = 'G';
+      Serial.println("TurnRight");
+      TurnRight();
+      input = 0;
+    }
+    else if(input == (byte)'L')
+    {
+      output = 'G';
+      Serial.println("TurnLeft");
+      TurnLeft();
+      input = 0;
+    }
+    else if(input == (byte)'A')
+    {
+      output = 'G';
+      Serial.println("SprayPaint1");
+      SprayPaint1();
+      input = 0;
+    }
+    else if(input == (byte)'E')
+    {
+      output = 'G';
+      Serial.println("SprayPaint2");
+      SprayPaint2();
+      input = 0;
+    }
+    else if(input == (byte)'U')
+    {
+      output = 'G';
+      Serial.println("SprayPaint3");
+      SprayPaint3();
+      input = 0;
+    }
+    output = 'D';
+
+
 
 }
 
@@ -120,59 +174,9 @@ void receiveData(int byteCount){
     {
         // check to see if anything has been sent from the pi
         input = Wire.read();
+        Serial.print("data received: ");
+        Serial.println(input);
 
-        // check if we need to go forward
-        if (input == (byte)'F')
-        {
-            // set the input to G and send it to the pi to let it know we got the message
-            output = 'G';
-            sendData();
-            GoForward();
-        }
-        else if(input == (byte)'B')
-        {
-            output = 'G';
-            sendData();
-            GoBackward();
-        }
-        else if(input == (byte)'R')
-        {
-            output = 'G';
-            sendData();
-            TurnRight();
-        }
-        else if(input == (byte)'L')
-        {
-            output = 'G';
-            sendData();
-            TurnLeft();
-        }
-        else if(input == (byte)'A')
-        {
-            output = 'G';
-            sendData();
-            SprayPaint1();
-        }
-        else if(input == (byte)'E')
-        {
-            output = 'G';
-            sendData();
-            SprayPaint2();
-        }
-        else if(input == (byte)'U')
-        {
-            output = 'G';
-            sendData();
-            SprayPaint3();
-        }
-        else
-        {
-            output = (byte)'E';
-            delay(full);
-            sendData();
-        }
-        output = 'D';
-        sendData();
     }
 }
 
@@ -191,7 +195,7 @@ void GoForward()
 {
   left.writeMicroseconds(1700);
   right.writeMicroseconds(1300);
-  delay(full);
+  delay(quarter);
 
   left.writeMicroseconds(1500);
   right.writeMicroseconds(1500);
@@ -202,7 +206,7 @@ void GoBackward()
 {
   left.writeMicroseconds(1300);
   right.writeMicroseconds(1700);
-  delay(full);
+  delay(quarter);
 
   left.writeMicroseconds(1500);
   right.writeMicroseconds(1500);
@@ -233,25 +237,37 @@ void TurnRight()
 
 void SprayPaint1()
 {
-  paint1.writeMicroseconds(1700);
-  delay(full);
-  paint1.writeMicroseconds(1500);
-  delay(1000);
+//   paint1.writeMicroseconds(1300);
+//   delay(full);
+//   paint1.writeMicroseconds(1700);
+//   delay(1000 + quarter * 4);
+//   paint1.writeMicroseconds(1500);
+//   delay(1000);
+//
+paint1.writeMicroseconds(1300);
+delay(full);
+paint1.writeMicroseconds(1500);
+delay(1000);
 
-  paint1.writeMicroseconds(1300);
-  delay(full);
-  paint1.writeMicroseconds(1500);
-  delay(1000);
+paint1.writeMicroseconds(1700);
+delay(full);
+paint1.writeMicroseconds(1500);
+delay(1000);
 }
-
 void SprayPaint2()
 {
-  paint2.writeMicroseconds(1700);
+  // paint2.writeMicroseconds(1300);
+  // delay(quarter);
+  // paint2.writeMicroseconds(1700);
+  // delay(1000 + quarter * 4);
+  // paint2.writeMicroseconds(1500);
+  // delay(1000);
+  paint2.writeMicroseconds(1300);
   delay(full);
   paint2.writeMicroseconds(1500);
   delay(1000);
 
-  paint2.writeMicroseconds(1300);
+  paint2.writeMicroseconds(1700);
   delay(full);
   paint2.writeMicroseconds(1500);
   delay(1000);
@@ -259,12 +275,18 @@ void SprayPaint2()
 
 void SprayPaint3()
 {
-  paint3.writeMicroseconds(1700);
+  // paint3.writeMicroseconds(1300);
+  // delay(quarter);
+  // paint3.writeMicroseconds(1700);
+  // delay(1000 + quarter * 4);
+  // paint3.writeMicroseconds(1500);
+  // delay(1000);
+  paint3.writeMicroseconds(1300);
   delay(full);
   paint3.writeMicroseconds(1500);
   delay(1000);
 
-  paint3.writeMicroseconds(1300);
+  paint3.writeMicroseconds(1700);
   delay(full);
   paint3.writeMicroseconds(1500);
   delay(1000);
