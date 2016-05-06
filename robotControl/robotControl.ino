@@ -46,9 +46,9 @@ int half = 700; // currently a rough estimate and has not been tested
 void setup()
 {
   // start hardware serial port
-  // Serial.begin(9600);
+  Serial.begin(9600);
   // start the interface
-  //port.begin(9600);
+  // port.begin(9600);
 
   // reserve proper amount of space for input string
   //input.reserve(256);
@@ -88,7 +88,7 @@ void loop()
     inputString = "";
     stringComplete = false;
   }  */
-  receiveData();
+  delay(500);
 
 }
 
@@ -116,50 +116,50 @@ void loop()
 // callback for received data
 void receiveData(int byteCount){
 
-    if(Wire.available())
+    while(Wire.available())
     {
         // check to see if anything has been sent from the pi
         input = Wire.read();
 
         // check if we need to go forward
-        if (input == 'F')
+        if (input == (byte)'F')
         {
             // set the input to G and send it to the pi to let it know we got the message
             output = 'G';
             sendData();
             GoForward();
         }
-        else if(input == 'B')
+        else if(input == (byte)'B')
         {
             output = 'G';
             sendData();
             GoBackward();
         }
-        else if(input == 'R')
+        else if(input == (byte)'R')
         {
             output = 'G';
             sendData();
             TurnRight();
         }
-        else if(input == 'L')
+        else if(input == (byte)'L')
         {
             output = 'G';
             sendData();
             TurnLeft();
         }
-        else if(input == 'A')
+        else if(input == (byte)'A')
         {
             output = 'G';
             sendData();
             SprayPaint1();
         }
-        else if(input == 'E')
+        else if(input == (byte)'E')
         {
             output = 'G';
             sendData();
             SprayPaint2();
         }
-        else if(input == 'U')
+        else if(input == (byte)'U')
         {
             output = 'G';
             sendData();
@@ -167,7 +167,7 @@ void receiveData(int byteCount){
         }
         else
         {
-            output = 'E';
+            output = (byte)'E';
             delay(full);
             sendData();
         }
